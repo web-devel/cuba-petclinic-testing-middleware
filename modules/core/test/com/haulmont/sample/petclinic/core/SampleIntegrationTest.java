@@ -1,6 +1,5 @@
 package com.haulmont.sample.petclinic.core;
 
-import com.haulmont.sample.petclinic.PetclinicTestContainer;
 import com.haulmont.cuba.core.EntityManager;
 import com.haulmont.cuba.core.Persistence;
 import com.haulmont.cuba.core.Transaction;
@@ -9,33 +8,29 @@ import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.security.entity.User;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-
+import com.haulmont.sample.petclinic.PetclinicTestContainer;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
+@ExtendWith(PetclinicTestContainer.Common.class)
 public class SampleIntegrationTest {
 
-    @ClassRule
     public static PetclinicTestContainer cont = PetclinicTestContainer.Common.INSTANCE;
 
-    private Metadata metadata;
-    private Persistence persistence;
-    private DataManager dataManager;
+    private static Metadata metadata;
+    private static Persistence persistence;
+    private static DataManager dataManager;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeAll
+    public static void setUp() throws Exception {
         metadata = cont.metadata();
         persistence = cont.persistence();
         dataManager = AppBeans.get(DataManager.class);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterAll
+    public static void tearDown() throws Exception {
     }
 
     @Test
@@ -43,11 +38,11 @@ public class SampleIntegrationTest {
         try (Transaction tx = persistence.createTransaction()) {
             EntityManager em = persistence.getEntityManager();
             TypedQuery<User> query = em.createQuery(
-                    "select u from sec$User u where u.login = :userLogin", User.class);
+                "select u from sec$User u where u.login = :userLogin", User.class);
             query.setParameter("userLogin", "admin");
             List<User> users = query.getResultList();
             tx.commit();
-            assertEquals(1, users.size());
+            Assertions.assertEquals(1, users.size());
         }
     }
 }

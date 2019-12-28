@@ -24,6 +24,9 @@
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
                 <action id="remove" type="remove"/>
+                <action id="createDiseaseWarningMailing"
+                  caption="msg://createDiseaseWarningMailing"
+                  icon="font-icon:BULLHORN"/>
             </actions>
             <columns>
                 <column id="name"/>

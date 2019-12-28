@@ -4,10 +4,12 @@ import com.haulmont.bali.util.Dom4j;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.dom4j.Document;
 import org.dom4j.Element;
-
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.*;
 
 public class PetclinicTestContainer extends TestContainer {
 
@@ -29,15 +31,35 @@ public class PetclinicTestContainer extends TestContainer {
                 // Add this file which is located in CUBA and defines some properties
                 // specifically for test environment. You can replace it with your own
                 // or add another one in the end.
-                "test-app.properties");
+                "com/haulmont/cuba/testsupport/test-app.properties");
         initDbProperties();
     }
 
     private void initDbProperties() {
+        DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource resource = resourceLoader.getResource("com/company/cejt/app.properties");
+        if (resource.exists()) {
+            try (InputStream inputStream = Files.newInputStream(resource.getFile().toPath())) {
+                Properties properties = new Properties();
+                properties.load(inputStream);
+                if ((Objects.equals(properties.getProperty("cuba.dataSourceProvider"), "application"))) {
+                    Optional.ofNullable(properties.getProperty("driverClassName")).ifPresent(e -> dbDriver = e);
+                    Optional.ofNullable(properties.getProperty("cuba.dataSource.jdbcUrl")).ifPresent(e -> dbUrl = e);
+                    Optional.ofNullable(properties.getProperty("cuba.dataSource.username")).ifPresent(e -> dbUser = e);
+                    Optional.ofNullable(properties.getProperty("cuba.dataSource.password")).ifPresent(e -> dbPassword = e);
+                    return;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Cannot find 'app.properties' file to read database connection properties. " +
+                        "You can set them explicitly in this method.");
+            }
+        }
+
         File contextXmlFile = new File("modules/core/web/META-INF/context.xml");
         if (!contextXmlFile.exists()) {
             contextXmlFile = new File("web/META-INF/context.xml");
         }
+
         if (!contextXmlFile.exists()) {
             throw new RuntimeException("Cannot find 'context.xml' file to read database connection properties. " +
                     "You can set them explicitly in this method.");
@@ -45,10 +67,10 @@ public class PetclinicTestContainer extends TestContainer {
         Document contextXmlDoc = Dom4j.readDocument(contextXmlFile);
         Element resourceElem = contextXmlDoc.getRootElement().element("Resource");
 
-        dbDriver = resourceElem.attributeValue("driverClassName");
-        dbUrl = resourceElem.attributeValue("url");
-        dbUser = resourceElem.attributeValue("username");
-        dbPassword = resourceElem.attributeValue("password");
+        Optional.ofNullable(resourceElem.attributeValue("driverClassName")).ifPresent(e -> dbDriver = e);
+        Optional.ofNullable(resourceElem.attributeValue("url")).ifPresent(e -> dbUrl = e);
+        Optional.ofNullable(resourceElem.attributeValue("username")).ifPresent(e -> dbUser = e);
+        Optional.ofNullable(resourceElem.attributeValue("password")).ifPresent(e -> dbPassword = e);
     }
 
     public static class Common extends PetclinicTestContainer {
