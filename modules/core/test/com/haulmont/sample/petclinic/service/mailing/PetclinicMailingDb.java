@@ -1,24 +1,31 @@
-package com.haulmont.sample.petclinic.service;
+package com.haulmont.sample.petclinic.service.mailing;
 
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.entity.SendingMessage;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.View;
+import com.haulmont.sample.petclinic.PetclinicTestContainer;
 import com.haulmont.sample.petclinic.entity.owner.Owner;
 import com.haulmont.sample.petclinic.entity.pet.Pet;
 import com.haulmont.sample.petclinic.entity.pet.PetType;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
- * PetclinicDb represents an API abstraction on the use-cases for the Integration tests of the
- * Petclinic application
+ * PetclinicMailingDb represents an DB API abstraction for the Disease Warning Mailing use-case
  */
-public class PetclinicDb {
+public class PetclinicMailingDb {
 
   private final DataManager dataManager;
+  private final PetclinicTestContainer testContainer;
 
-  public PetclinicDb(DataManager dataManager) {
+  public PetclinicMailingDb(
+      DataManager dataManager,
+      PetclinicTestContainer testContainer
+  ) {
     this.dataManager = dataManager;
+    this.testContainer = testContainer;
   }
 
 
@@ -84,5 +91,9 @@ public class PetclinicDb {
     return dataManager.load(Owner.class)
         .query("e.city = ?1", city)
         .list();
+  }
+
+  void removeEntity(Entity<UUID> entity) {
+    testContainer.deleteRecord(entity);
   }
 }

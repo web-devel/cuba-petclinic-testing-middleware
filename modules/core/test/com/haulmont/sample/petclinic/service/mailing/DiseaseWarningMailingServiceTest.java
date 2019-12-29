@@ -1,9 +1,7 @@
-package com.haulmont.sample.petclinic.service;
+package com.haulmont.sample.petclinic.service.mailing;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.entity.SendingMessage;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.DataManager;
@@ -12,6 +10,7 @@ import com.haulmont.sample.petclinic.PetclinicTestContainer;
 import com.haulmont.sample.petclinic.entity.owner.Owner;
 import com.haulmont.sample.petclinic.entity.pet.Pet;
 import com.haulmont.sample.petclinic.entity.pet.PetType;
+import com.haulmont.sample.petclinic.service.DiseaseWarningMailingService;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(PetclinicTestContainer.Common.class)
-public class DiseaseWarningMailingServiceBeanTest {
+public class DiseaseWarningMailingServiceTest {
 
   private final String ALABASTIA = "Alabastia";
   private final String ELECTRICAL_OVERCHARGING = "Electrical overcharging";
@@ -30,7 +29,7 @@ public class DiseaseWarningMailingServiceBeanTest {
 
   private static DiseaseWarningMailingService diseaseWarningMailingService;
 
-  private static PetclinicDb db;
+  private static PetclinicMailingDb db;
 
 
   private PetType electricType;
@@ -40,8 +39,10 @@ public class DiseaseWarningMailingServiceBeanTest {
   public static void setupEnvironment() {
     diseaseWarningMailingService = AppBeans.get(DiseaseWarningMailingService.class);
 
-    DataManager dataManager = AppBeans.get(DataManager.class);
-    db = new PetclinicDb(dataManager);
+    db = new PetclinicMailingDb(
+        AppBeans.get(DataManager.class),
+        testContainer
+    );
   }
 
   @BeforeEach
@@ -194,8 +195,8 @@ public class DiseaseWarningMailingServiceBeanTest {
 
     @AfterEach
     void removeAdditionalElectricPetAndOwner() {
-      removeEntity(zapdos);
-      removeEntity(falkner);
+      db.removeEntity(zapdos);
+      db.removeEntity(falkner);
     }
 
   }
@@ -203,11 +204,7 @@ public class DiseaseWarningMailingServiceBeanTest {
   @AfterEach
   public void clearOutgoingEmails() {
     db.outgoingEmails()
-        .forEach(this::removeEntity);
-  }
-
-  private void removeEntity(Entity entity) {
-    testContainer.deleteRecord(entity);
+        .forEach(db::removeEntity);
   }
 
 }
