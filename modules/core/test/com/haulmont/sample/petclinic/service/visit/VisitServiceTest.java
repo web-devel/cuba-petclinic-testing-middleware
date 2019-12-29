@@ -9,7 +9,6 @@ import com.haulmont.sample.petclinic.PetclinicTestContainer;
 import com.haulmont.sample.petclinic.entity.pet.Pet;
 import com.haulmont.sample.petclinic.entity.visit.Visit;
 import com.haulmont.sample.petclinic.service.VisitService;
-import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +25,7 @@ public class VisitServiceTest {
   private static VisitService visitService;
 
   private static PetclinicVisitDb db;
+
   private Visit visit;
   private Pet pikachu;
 
@@ -43,7 +43,7 @@ public class VisitServiceTest {
 
   @BeforeEach
   public void loadPikachu() {
-    pikachu = db.pikachu();
+    pikachu = db.petWithName("Pikachu", "pet-with-owner-and-type");
   }
 
   @Test

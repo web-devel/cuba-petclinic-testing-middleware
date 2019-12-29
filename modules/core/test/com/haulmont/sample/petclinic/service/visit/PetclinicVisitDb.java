@@ -36,10 +36,6 @@ public class PetclinicVisitDb {
     testContainer.deleteRecord(entity);
   }
 
-  public Pet pikachu() {
-    return petWithName("Pikachu", "pet-with-owner-and-type");
-  }
-
   public Optional<Pet> petWithIdentificationNumber(String identificationNumber) {
     return petWithIdentificationNumber(identificationNumber, View.LOCAL);
   }
