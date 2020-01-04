@@ -1,4 +1,4 @@
-package com.haulmont.sample.petclinic.service.visit;
+package com.haulmont.sample.petclinic.service.visit.create_visit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,6 +72,7 @@ public class VisitServiceTest {
     assertThat(visit.getPet())
         .isEqualTo(pikachu);
 
+    // and:
     assertThat(visit.getVisitDate())
         .isInSameDayAs(timeSource.currentTimestamp());
 

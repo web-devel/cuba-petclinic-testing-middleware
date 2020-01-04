@@ -51,7 +51,8 @@ public class DiseaseWarningMailingServiceTest {
     // given: there is an 'Electric' pet type
     electricType = db.petTypeWithName("Electric");
 
-    assertThat(electricType).isNotNull();
+    assertThat(electricType)
+        .isNotNull();
 
     // and: there is exactly one electric pet from Alabastia
     electricPetsFromAlabastia = db.petsWithTypeFromCity(
@@ -60,7 +61,8 @@ public class DiseaseWarningMailingServiceTest {
         "pet-with-owner-and-type"
     );
 
-    assertThat(electricPetsFromAlabastia).hasSize(1);
+    assertThat(electricPetsFromAlabastia)
+        .hasSize(1);
   }
 
 
@@ -129,7 +131,8 @@ public class DiseaseWarningMailingServiceTest {
   public void warnAboutDisease_createsNoEmails_forACityWithoutOwners() {
 
     // given: there is no owner in the Cerulean City
-    assertThat(db.ownersFromCity("Cerulean City")).isEmpty();
+    assertThat(db.ownersFromCity("Cerulean City"))
+        .isEmpty();
 
     // when: a warning is send out for Cerulean City
     int effectedPets = warnAboutElectricalOverchargingIn("Cerulean City");

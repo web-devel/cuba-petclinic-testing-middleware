@@ -1,4 +1,4 @@
-package com.haulmont.sample.petclinic.service.visit;
+package com.haulmont.sample.petclinic.service.visit.create_visit;
 
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.DataManager;
@@ -19,8 +19,10 @@ public class PetclinicVisitDb {
   private final DataManager dataManager;
   private final PetclinicTestContainer testContainer;
 
-  public PetclinicVisitDb(DataManager dataManager,
-      PetclinicTestContainer testContainer) {
+  public PetclinicVisitDb(
+      DataManager dataManager,
+      PetclinicTestContainer testContainer
+  ) {
     this.dataManager = dataManager;
     this.testContainer = testContainer;
   }
