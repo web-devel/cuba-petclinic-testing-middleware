@@ -50,20 +50,23 @@ public class VisitServiceTest {
   public void createVisitForToday_createsANewVisit_forTheCorrectPet() {
 
     // given:
-    assertThat(db.countVisitsFor(pikachu)).isEqualTo(1);
+    assertThat(db.countVisitsFor(pikachu))
+        .isEqualTo(1);
 
     // when:
     visit = visitService.createVisitForToday(pikachu.getIdentificationNumber());
 
     // then:
-    assertThat(db.countVisitsFor(pikachu)).isEqualTo(2);
+    assertThat(db.countVisitsFor(pikachu))
+        .isEqualTo(2);
   }
 
   @Test
   public void createVisitForToday_createsANewVisit_withTheCorrectVisitInformation() {
 
     // given:
-    assertThat(db.countVisitsFor(pikachu)).isEqualTo(1);
+    assertThat(db.countVisitsFor(pikachu))
+        .isEqualTo(1);
 
     // when:
     visit = visitService.createVisitForToday(pikachu.getIdentificationNumber());
