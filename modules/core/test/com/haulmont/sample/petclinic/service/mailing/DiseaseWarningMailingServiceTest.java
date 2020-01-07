@@ -17,14 +17,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-@ExtendWith(PetclinicTestContainer.Common.class)
 public class DiseaseWarningMailingServiceTest {
 
   private final String ALABASTIA = "Alabastia";
   private final String ELECTRICAL_OVERCHARGING = "Electrical overcharging";
 
+  @RegisterExtension
   public static PetclinicTestContainer testContainer = PetclinicTestContainer.Common.INSTANCE;
 
   private static DiseaseWarningMailingService diseaseWarningMailingService;

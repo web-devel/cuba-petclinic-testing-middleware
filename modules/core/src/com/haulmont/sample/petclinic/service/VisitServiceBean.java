@@ -31,43 +31,35 @@ public class VisitServiceBean implements VisitService {
 
   @Override
   public Visit createVisitForToday(String identificationNumber) {
-
-    Optional<Pet> pet = loadPetByIdentificationNumber(identificationNumber);
-
-    return pet.map(this::createVisitForPet).orElse(null);
+    return loadPetByIdentificationNumber(identificationNumber)
+            .map(this::createVisitForPet)
+            .map(this::saveVisit)
+            .orElse(null);
   }
 
 
   private Visit createVisitForPet(Pet pet) {
-
     Visit visit = dataManager.create(Visit.class);
-
     visit.setPet(pet);
     visit.setVisitDate(timeSource.currentTimestamp());
+    return visit;
+  }
 
+  private Visit saveVisit(Visit visit) {
     return dataManager.commit(visit);
   }
 
-
-  /**
-   * loads a Pet by its Identification Number
-   * @param identificationNumber the Identification Number to load
-   * @return the Pet for the given Identification Number if found
-   */
   private Optional<Pet> loadPetByIdentificationNumber(String identificationNumber) {
     return dataManager.load(Pet.class)
-        .query("select e from petclinic_Pet e where e.identificationNumber = :identificationNumber")
-        .parameter("identificationNumber", identificationNumber)
+        .query("e.identificationNumber = ?1", identificationNumber)
         .optional();
   }
-
 
   @Override
   public LocalDate calculateNextRegularCheckupDate(
       Pet pet,
       List<Visit> vistsOfPet
   ) {
-
     RegularCheckupDateCalculator calculator = regularCheckupDateCalculators.stream()
         .filter(regularCheckupDateCalculator -> regularCheckupDateCalculator.supports(pet))
         .findFirst()
@@ -76,5 +68,4 @@ public class VisitServiceBean implements VisitService {
     return calculator.calculateRegularCheckupDate(pet, vistsOfPet, timeSource);
 
   }
-
 }

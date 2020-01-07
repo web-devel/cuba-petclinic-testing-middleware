@@ -10,12 +10,12 @@ import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.sample.petclinic.PetclinicTestContainer;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.List;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-@ExtendWith(PetclinicTestContainer.Common.class)
 public class SampleIntegrationTest {
 
+    @RegisterExtension
     public static PetclinicTestContainer cont = PetclinicTestContainer.Common.INSTANCE;
 
     private static Metadata metadata;
